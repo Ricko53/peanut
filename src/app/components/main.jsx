@@ -1,14 +1,14 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const kit = require('./ReactKit');
-const onEndTransition = require('./TransitionEnd');
+import React from 'react'
+import ReactDOM from 'react-dom'
+import kit from './ReactKit'
+import onEndTransition from './TransitionEnd'
 
-const Main = React.createClass({
+export default class Main extends React.Component{
     render() {
       return (
-          <div>Hello</div>
+          <div>Hello
+          {this.props.children}
+          </div>
       );
-    },
-});
-
-module.exports = Main;
+    }
+}
