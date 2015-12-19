@@ -16,6 +16,12 @@ svg:not(:root) {
     overflow: hidden;
 }
 
+#skrollr-body {
+    height:100%;
+    overflow:visible;
+    position:relative;
+}
+
 .li-main {
 	width: 100%;
 }
@@ -28,22 +34,24 @@ svg:not(:root) {
 
 .li-body {
 	width: 100%;
-	padding: 2em;
+	padding: 1em;
 }
 
 .li-box {
 	position: relative;
-	width: 80%;
-	height: 10em;
+	width: 100%;
+	height: 8em;
 	background: #fff;
-	margin: 1em 0;
-	border-radius: 6px;
+	margin: 0.5em 0;
+	border-radius: 2px;
 	overflow: hidden;
 }
 
 .li-box-img {
 	width: 100%;
 }
+
+
 
 
 
