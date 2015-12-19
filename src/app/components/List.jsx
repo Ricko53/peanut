@@ -1,6 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Box, Item } from 'react-polymer-layout'
+import Skrollr from 'skrollr'
+
+const initSkrollr = function() {
+    window.Skrollr = Skrollr.init({
+        smoothScrolling: false,
+        mobileDeceleration: 0.004,
+    });
+};
 
 const List = React.createClass({
 	getInitialState() {
@@ -18,6 +26,7 @@ const List = React.createClass({
     // },
 
     componentDidMount() {
+        initSkrollr();
     	//window.requestAnimationFrame(this.updatePosition);
     },
 
