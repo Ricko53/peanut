@@ -48,9 +48,34 @@ svg:not(:root) {
 }
 
 .li-box-img {
-	width: 100%;
+	height: 100vh;
 }
 
+.li-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.li-over-content {
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    -webkit-transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    transition: all 1s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.li-over-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+}
+
+/******************  Use span svg *******************/
 #li-svg {
     position: absolute;
     top: 0;

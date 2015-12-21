@@ -53,7 +53,23 @@ const bezier = function(x1, y1, x2, y2, epsilon) {
     };
 };
 
+const setTranslateX = function(node, amount) {
+    node.style.webkitTransform =
+    node.style.MozTransform =
+    node.style.msTransform =
+    node.style.transform = "translateX(" + Math.round(amount) + "px)";
+};
+
 const List = React.createClass({
+    getInitialState() {
+      return {
+        imagePosition: '',
+        imgUrl: ' ',
+        imageOpen: false,
+        imageTran: false,
+      };
+    },
+
     componentDidMount() {
         initSkrollr();
     	//window.requestAnimationFrame(this.updatePosition);
@@ -75,68 +91,103 @@ const List = React.createClass({
     	window.requestAnimationFrame(this.updatePosition);
     },
 
-    handleSnap() {
-        let shzSVGEl = ReactDOM.findDOMNode(this.refs.svg);
-        let snap = Snap(shzSVGEl);
-        let shzPathEl = snap.select('path');
+    handleImage(e) {
+        this.state.imgUrl = e.target.src;
+        this.state.imagePosition = e.target.parentNode;
+        this.setState({
+            imgUrl: e.target.src,
+            imagePosition: e.target.parentNode,
+            imageOpen: true,
+        });
+        setTimeout(_ => {this.setState({
+            imageTran: true,
+        });}, 1000);
 
-        let path = "M290,40c0,0.13-0.001,380.26-0.003,380.39c-0.002,0.134,0.006,24.479,0.003,24.609 c0,3.095-2.562,5.001-5,5.001h-27.125H41.625H15c-1.875,0-5-1.25-5-5.001c-0.003-0.13,0.004-24.509,0.003-24.641 C10.001,420.239,10,40.119,10,40l0,0c0-0.141-0.002-24.859,0-25c0,0,0-5,5-5h26.625h216.25H285c2.438,0,5,1.906,5,5 C290.002,15.13,290,39.869,290,40L290,40z";
-
-        let duration = 450;
-
-        let epsilon = (1000 / 60 / duration) / 4;
-
-        shzPathEl.stop().animate({'path' : path}, duration, bezier(0.7, 0, 0.3, 1, epsilon));
+        this.startAnimat();
     },
 
+    startAnimat() {
+        let winWidth = window.innerWidth;
+        let Img = ReactDOM.findDOMNode(this.refs.overImage);
+        let Imagepos = Img.getBoundingClientRect();
+        let amount = (Imagepos.width - winWidth)/2;
+
+        setTranslateX(Img, amount);
+    },
+
+    render() {
+        let imagePos = this.state.imagePosition? this.state.imagePosition.getBoundingClientRect() : '';
+        let contentStyle = {
+            height: this.state.imageTran ? "100%" : imagePos.height,
+            width: this.state.imageTran ? "100%" : imagePos.width,
+            top: this.state.imageTran ? 0 : imagePos.top,
+            left: this.state.imageTran ? 0 : imagePos.left,
+            opacity: this.state.imageOpen? 1 : 0,
+        };
+        return (
+          	<div className="li-main">
+                <Box id="skrollr-body" center vertical className="li-body">
+              		<div className="li-box">
+                    </div>
+              		<div className="li-box">
+              			<img ref="image" className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} />
+              		</div>
+              		<div onClick={e => this.handleImage(e)} className="li-box">
+                        <img className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} data-bottom-top="transform: translate3d(0px, -30%, 0px);" data-top-bottom="transform: translate3d(0px, 0%, 0px);" />
+                    </div>
+              		<div className="li-box"></div>
+              		<div className="li-box"></div>
+              		<div className="li-box"></div>
+              		<div className="li-box"></div>
+                </Box>
+                <div className="li-overlay">
+                    <div className= "li-over-content" style={contentStyle}>
+                        <img className="li-over-image" ref="overImage" src={this.state.imgUrl} />
+                    </div>
+                </div>
+            </div>
+        );
+    },
     // componentDidMount() {
-    // 	window.addEventListener('touchstart', this.touchStart);
-    //   	window.addEventListener( 'touchmove', this.handleMove );
+    //  window.addEventListener('touchstart', this.touchStart);
+    //      window.addEventListener( 'touchmove', this.handleMove );
     // },
 
     // touchStart(evt) {
-    // 	evt.preventDefault();
-    // 	let touchobj = ev.changedTouches[0];
-    // 	this.state.imgX = parseInt(touchobj.pageY);
+    //  evt.preventDefault();
+    //  let touchobj = ev.changedTouches[0];
+    //  this.state.imgX = parseInt(touchobj.pageY);
     // },
 
     // handleMove(evt) {
-    // 	let touches = evt.changedTouches;
-    // 	let img = ReactDOM.findDOMNode(this.refs.image);
-    // 	let moveY = 0;
-    // 	moveY = this.state.imgX - touches[0].pageY;
-    // 	let amount = moveY/10;
-    // 	img.style.transform = "translateY(" + amount + "px)";
+    //  let touches = evt.changedTouches;
+    //  let img = ReactDOM.findDOMNode(this.refs.image);
+    //  let moveY = 0;
+    //  moveY = this.state.imgX - touches[0].pageY;
+    //  let amount = moveY/10;
+    //  img.style.transform = "translateY(" + amount + "px)";
     // },
 
-    render() {
-      return (
-      	  <div className="li-main">
-          <Box id="skrollr-body" center vertical className="li-body">
-                <svg ref="svg" id="li-svg" width="450" height="750">
-                    <path className="li-path" d="M280,466c0,0.13-0.001,0.26-0.003,0.39c-0.002,0.134-0.004,0.266-0.007,0.396
-                    C279.572,482.992,266.307,496,250,496h-2.125H51.625H50c-16.316,0-29.592-13.029-29.99-29.249c-0.003-0.13-0.006-0.261-0.007-0.393
-                    C20.001,466.239,20,466.119,20,466l0,0c0-0.141,0.001-0.281,0.003-0.422C20.228,449.206,33.573,436,50,436h1.625h196.25H250
-                    c16.438,0,29.787,13.222,29.997,29.608C279.999,465.738,280,465.869,280,466L280,466z"></path>
-                </svg>
-          		<div onClick={this.handleSnap} className="li-box">
-                </div>
-          		<div className="li-box">
-          			<img ref="image" className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} />
-          		</div>
-          		<div className="li-box">
-                    <img className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} data-bottom-top="transform: translate3d(0px, -30%, 0px);" data-top-bottom="transform: translate3d(0px, 0%, 0px);" />
-                </div>
-          		<div className="li-box"></div>
-          		<div className="li-box"></div>
-          		<div className="li-box"></div>
-          		<div className="li-box"></div>
-          		<div className="li-box"></div>
-          		<div className="li-box"></div>
-          </Box>
-          </div>
-      );
-    },
+    // handleSnap() {
+    //     let shzSVGEl = ReactDOM.findDOMNode(this.refs.svg);
+    //     let snap = Snap(shzSVGEl);
+    //     let shzPathEl = snap.select('path');
+
+    //     let path = "M290,40c0,0.13-0.001,380.26-0.003,380.39c-0.002,0.134,0.006,24.479,0.003,24.609 c0,3.095-2.562,5.001-5,5.001h-27.125H41.625H15c-1.875,0-5-1.25-5-5.001c-0.003-0.13,0.004-24.509,0.003-24.641 C10.001,420.239,10,40.119,10,40l0,0c0-0.141-0.002-24.859,0-25c0,0,0-5,5-5h26.625h216.25H285c2.438,0,5,1.906,5,5 C290.002,15.13,290,39.869,290,40L290,40z";
+
+    //     let duration = 450;
+
+    //     let epsilon = (1000 / 60 / duration) / 4;
+
+    //     shzPathEl.stop().animate({'path' : path}, duration, bezier(0.7, 0, 0.3, 1, epsilon));
+
+    //     <svg ref="svg" id="li-svg" width="450" height="750">
+    //         <path className="li-path" d="M280,466c0,0.13-0.001,0.26-0.003,0.39c-0.002,0.134-0.004,0.266-0.007,0.396
+    //         C279.572,482.992,266.307,496,250,496h-2.125H51.625H50c-16.316,0-29.592-13.029-29.99-29.249c-0.003-0.13-0.006-0.261-0.007-0.393
+    //         C20.001,466.239,20,466.119,20,466l0,0c0-0.141,0.001-0.281,0.003-0.422C20.228,449.206,33.573,436,50,436h1.625h196.25H250
+    //         c16.438,0,29.787,13.222,29.997,29.608C279.999,465.738,280,465.869,280,466L280,466z"></path>
+    //     </svg>
+    // },
 });
 
 module.exports = List;
