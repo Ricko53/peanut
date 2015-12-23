@@ -75,6 +75,32 @@ svg:not(:root) {
     height: 100vh;
 }
 
+.li-over-image,
+.li-bar-indicoter {
+    -webkit-transition: -webkit-transform 0.2s linear;
+    transition: transform 0.2s linear;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+}
+
+.li-over-bar {
+    position: fixed;
+    bottom: 30px;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    z-index: 1;
+    background-color: rgba(255,255,255,0.3);
+}
+
+.li-bar-indicoter {
+    background-color: rgba(255,255,255,0.8);
+    height: 2px;
+    position: absolute;
+}
+
 /******************  Use span svg *******************/
 #li-svg {
     position: absolute;

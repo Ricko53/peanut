@@ -53,6 +53,14 @@ const bezier = function(x1, y1, x2, y2, epsilon) {
     };
 };
 
+let latestTilt,
+    centerOffset,
+    viewPort,
+    imgAspectRatio,
+    tiltBarWidth,
+    tiltBarIndicatorWidth,
+    tiltCenterOffset;
+
 const setTranslateX = function(node, amount) {
     node.style.webkitTransform =
     node.style.MozTransform =
@@ -67,6 +75,9 @@ const List = React.createClass({
         imgUrl: ' ',
         imageOpen: false,
         imageTran: false,
+        imgNode: '',
+        imgData: '',
+        barNode: '',
       };
     },
 
@@ -102,18 +113,61 @@ const List = React.createClass({
         setTimeout(_ => {this.setState({
             imageTran: true,
         });}, 1000);
+    },
 
-        this.startAnimat();
+    initMath() {
+        this.state.imgNode = ReactDOM.findDOMNode(this.refs.overImage);
+        this.state.barNode = ReactDOM.findDOMNode(this.refs.overBar);
+        viewPort = {
+            winHeight: parseInt(window.innerHeight, 10),
+            winWidth: parseInt(window.innerWidth, 10),
+        };
+        this.state.imgData = this.state.imgNode.getBoundingClientRect();
+        imgAspectRatio = this.state.imgData.width / this.state.imgData.height; 
     },
 
     startAnimat() {
-        let winWidth = window.innerWidth;
-        let Img = ReactDOM.findDOMNode(this.refs.overImage);
-        let Imagepos = Img.getBoundingClientRect();
-        let amount = (Imagepos.width - winWidth)/2;
+        let tiltBarPadding = 20;
+        centerOffset = (this.state.imgData.width - viewPort.winWidth) / 2;
+        tiltBarWidth = viewport.winWidth - tiltBarPadding;
 
-        setTranslateX(Img, amount);
+        tiltBarIndicatorWidth = (viewport.winWidth * tiltBarWidth) / this.state.imgData.width;
+        this.state.barNode.style.width = = tiltBarIndicatorWidth + 'px';
+
+        tiltCenterOffset = ((tiltBarWidth / 2) - (tiltBarIndicatorWidth / 2));
     },
+
+    addEventListeners() {
+        if (window.DeviceOrientationEvent) {
+
+            let averageGamma = [];
+
+            window.addEventListener('deviceorientation', function(eventData) {
+
+                if (!disableTilt) {
+
+                    if (averageGamma.length > 8) {
+                        averageGamma.shift();
+                    }
+
+                    averageGamma.push(eventData.gamma);
+
+                    latestTilt = averageGamma.reduce(function(a, b) { return a+b; }) / averageGamma.length;
+
+                }
+
+            }, false);
+
+            window.requestAnimationFrame(photoTilt);
+
+        }
+    },
+
+    photoTilt() {
+
+    },
+
+
 
     render() {
         let imagePos = this.state.imagePosition? this.state.imagePosition.getBoundingClientRect() : '';
@@ -142,7 +196,10 @@ const List = React.createClass({
                 </Box>
                 <div className="li-overlay">
                     <div className= "li-over-content" style={contentStyle}>
-                        <img className="li-over-image" ref="overImage" src={this.state.imgUrl} />
+                        <img ref="overImage" className="li-over-image" src={this.state.imgUrl} />
+                        <div className="li-over-bar">
+                            <div ref="overBar" className="li-bar-indicoter"></div>
+                        </div>
                     </div>
                 </div>
             </div>
