@@ -53,20 +53,21 @@ const bezier = function(x1, y1, x2, y2, epsilon) {
     };
 };
 
-let latestTilt,
-    centerOffset,
-    viewPort,
-    imgAspectRatio,
-    tiltBarWidth,
-    tiltBarIndicatorWidth,
-    tiltCenterOffset;
-
 const setTranslateX = function(node, amount) {
     node.style.webkitTransform =
     node.style.MozTransform =
     node.style.msTransform =
     node.style.transform = "translateX(" + Math.round(amount) + "px)";
 };
+
+let latestTilt,
+    disableTilt,
+    centerOffset,
+    viewPort,
+    imgAspectRatio,
+    tiltBarWidth,
+    tiltBarIndicatorWidth,
+    tiltCenterOffset;
 
 const List = React.createClass({
     getInitialState() {
@@ -78,6 +79,7 @@ const List = React.createClass({
         imgNode: '',
         imgData: '',
         barNode: '',
+        maxTilt: 20,
       };
     },
 
@@ -103,16 +105,19 @@ const List = React.createClass({
     },
 
     handleImage(e) {
-        this.state.imgUrl = e.target.src;
-        this.state.imagePosition = e.target.parentNode;
         this.setState({
             imgUrl: e.target.src,
             imagePosition: e.target.parentNode,
             imageOpen: true,
         });
-        setTimeout(_ => {this.setState({
-            imageTran: true,
-        });}, 1000);
+        setTimeout(_ => {
+            this.setState({
+                imageTran: true,
+            });
+            this.initMath();
+            this.startAnimat();
+            this.addEventListeners();
+        }, 1000);
     },
 
     initMath() {
@@ -129,12 +134,21 @@ const List = React.createClass({
     startAnimat() {
         let tiltBarPadding = 20;
         centerOffset = (this.state.imgData.width - viewPort.winWidth) / 2;
-        tiltBarWidth = viewport.winWidth - tiltBarPadding;
+        tiltBarWidth = viewPort.winWidth - tiltBarPadding;
 
-        tiltBarIndicatorWidth = (viewport.winWidth * tiltBarWidth) / this.state.imgData.width;
-        this.state.barNode.style.width = = tiltBarIndicatorWidth + 'px';
+        tiltBarIndicatorWidth = (viewPort.winWidth * tiltBarWidth) / this.state.imgData.width;
+        this.state.barNode.style.width = tiltBarIndicatorWidth + 'px';
 
         tiltCenterOffset = ((tiltBarWidth / 2) - (tiltBarIndicatorWidth / 2));
+
+        if (tiltCenterOffset > 0) {
+            disableTilt = false;
+        } else {
+            disableTilt = true;
+            latestTilt = 0;
+        }
+
+        this.photoTilt();
     },
 
     addEventListeners() {
@@ -158,16 +172,38 @@ const List = React.createClass({
 
             }, false);
 
-            window.requestAnimationFrame(photoTilt);
+            window.requestAnimationFrame(this.photoTilt);
 
         }
     },
 
     photoTilt() {
+        let tilt = latestTilt;
+        let pxToMove;
 
+        if (tilt > 0) {
+            tilt = Math.min(tilt, this.state.maxTilt);
+        } else {
+            tilt = Math.max(tilt, this.state.maxTilt * -1);
+        }
+
+        pxToMove = (tilt * centerOffset) / this.state.maxTilt;
+
+        this.updateImgPosition((centerOffset + pxToMove) * -1);
+
+        this.updateTiltBar(tilt);
+
+        window.requestAnimationFrame(this.photoTilt);
     },
 
+    updateTiltBar(tilt) {
+        let pxToMove = (tilt * ((tiltBarWidth - tiltBarIndicatorWidth) / 2)) / this.state.maxTilt;
+        setTranslateX(this.state.barNode, (tiltCenterOffset + pxToMove) );
+    },
 
+    updateImgPosition(pxToMove) {
+        setTranslateX(this.state.imgNode, pxToMove);
+    },
 
     render() {
         let imagePos = this.state.imagePosition? this.state.imagePosition.getBoundingClientRect() : '';
