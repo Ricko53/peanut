@@ -1,4 +1,4 @@
-/*  */
+/* Listing transition end function */
 function whichTransitionEvent(){
     let t;
     let el = document.createElement('fakeelement');

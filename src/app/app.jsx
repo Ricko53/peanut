@@ -4,6 +4,7 @@ import { render } from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import Main from './components/main'
 import List from './components/List'
+import NewList from './components/NewList'
 import { Router, Route, IndexRoute } from 'react-router'
   
 //Needed for React Developer Tools
@@ -16,7 +17,8 @@ injectTapEventPlugin();
 render((
 	<Router>
 	    <Route path="/" component={Main} >
-	      	<IndexRoute component={List} />
+	      	<IndexRoute component={NewList} />
+            <Route path="/list" component={List} />
 	    </Route>
 	</Router>
 ),document.getElementById('app'))
