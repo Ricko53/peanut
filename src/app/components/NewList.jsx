@@ -47,20 +47,18 @@ const NewList = React.createClass({
     },
 
     handleImage(e) {
+        let parent = e.target.parentNode.previousSibling;
+        window.Skrollr.animateTo(window.Skrollr.relativeToAbsolute(parent, 'top', 'center'),{duration:200});
         this.setState({
             imgUrl: e.target.src,
             imagePosition: e.target.parentNode,
             imageOpen: true,
-            //imageTran: true,
         });
         setTimeout(_ => {
             this.setState({
                imageTran: true,
                textShow: true,
            });
-            // this.initMath();
-            // this.startAnimat();
-            // this.addEventListeners();
         },100);
     },
 
@@ -192,13 +190,13 @@ const NewList = React.createClass({
                 <Box id="skrollr-body" center vertical className="li-body">
                     <div className="li-box">
                     </div>
-                    <div className="li-box">
-                        <img ref="image" className="li-box-img" src={'./images/treats2.jpg'} />
+                    <div id="skrollrs" className="li-box">
+                        <img ref="image" onClick={e => this.handleImage(e)} className="li-box-img" src={'./images/treats2.jpg'} />
                     </div>
                     <div onClick={e => this.handleImage(e)} className="li-box">
                         <img className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} 
-                             data-bottom-top="transform: translate3d(-50%, -30%, 0px);" 
-                             data-top-bottom="transform: translate3d(-50%, 0%, 0px);" />
+                             data-bottom-top="transform: translate3d(-35%, -30%, 0px);" 
+                             data-top-bottom="transform: translate3d(-35%, 0%, 0px);" />
                     </div>
                     <div className="li-box"></div>
                     <div className="li-box"></div>
