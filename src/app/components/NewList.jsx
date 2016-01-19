@@ -39,6 +39,7 @@ const NewList = React.createClass({
         imgData: '',
         barNode: '',
         maxTilt: 20,
+        imgTransform: '',
       };
     },
 
@@ -47,9 +48,10 @@ const NewList = React.createClass({
     },
 
     handleImage(e) {
-        let parent = e.target.parentNode.previousSibling;
-        window.Skrollr.animateTo(window.Skrollr.relativeToAbsolute(parent, 'top', 'center'),{duration:200});
+        // let parent = e.target.parentNode.previousSibling;
+        // window.Skrollr.animateTo(window.Skrollr.relativeToAbsolute(parent, 'top', 'center'),{duration:200});
         this.setState({
+            imgTransform: e.target.style.transform,
             imgUrl: e.target.src,
             imagePosition: e.target.parentNode,
             imageOpen: true,
@@ -60,6 +62,9 @@ const NewList = React.createClass({
                textShow: true,
            });
         },100);
+        this.setState({
+            test: true,
+        });
     },
 
     startImage() {
@@ -181,6 +186,9 @@ const NewList = React.createClass({
             transform: 'translate3d( 0, ' + dy + 'px, 0 )',
             WebkitTransform: 'translate3d( 0, ' + dy + 'px, 0 )',
         };
+        let imageStyle = {
+            transform: this.state.imgTransform,
+        };
         let textStyle = {
             transform: 'translate3d( 0, ' + cy + ', 0 )',
             WebkitTransform: 'translate3d( 0, ' + cy + ', 0 )',
@@ -191,9 +199,11 @@ const NewList = React.createClass({
                     <div className="li-box">
                     </div>
                     <div id="skrollrs" className="li-box">
-                        <img ref="image" onClick={e => this.handleImage(e)} className="li-box-img" src={'./images/treats2.jpg'} />
+                        <img ref="image" onClick={e => this.handleImage(e)} className="li-box-img" src={'./images/treats2.jpg'} 
+                             data-bottom-top="transform: translate3d(0, -30%, 0px);" 
+                             data-top-bottom="transform: translate3d(0, 0%, 0px);"/>
                     </div>
-                    <div onClick={e => this.handleImage(e)} className="li-box">
+                    <div onClick={e => this.handleImage(e)} className={"li-box"}>
                         <img className="li-box-img" src={'./images/green-goddess-sandwiches-31.jpg'} 
                              data-bottom-top="transform: translate3d(-35%, -30%, 0px);" 
                              data-top-bottom="transform: translate3d(-35%, 0%, 0px);" />
@@ -205,7 +215,7 @@ const NewList = React.createClass({
                 </Box>
                 <div className={ this.state.imageTran ? "li-overlay show-content" : "li-overlay"}>
                     <div className= "li-over-content" style={contentStyle}>
-                        <img onClick={this.startImage} ref="overImage" className="li-over-image" src={this.state.imgUrl} />
+                        <img onClick={this.startImage} ref="overImage" style={imageStyle} className="li-over-image" src={this.state.imgUrl} />
                         <div className="li-over-bar">
                             <div ref="overBar" className="li-bar-indicoter"></div>
                         </div>

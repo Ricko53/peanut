@@ -46,6 +46,12 @@ svg:not(:root) {
 	border-radius: 2px;
 	overflow: hidden;
     cursor: pointer;
+
+    transition: height 0.2s ease-in-out;
+}
+
+.li-box.li-height {
+    height: 35em;
 }
 
 .li-box-img {
@@ -76,7 +82,7 @@ svg:not(:root) {
     position: absolute;
     z-index: 10;
     overflow: hidden;
-    -webkit-transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 0.4s;
+    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 0.4s;
     transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 0.4s;
 }
 
@@ -87,8 +93,6 @@ svg:not(:root) {
     //width: 100%;
     z-index: 8;
     height: 100vh;
-    transform: translate3d(-35%, -20%, 0);
-    -webkit-transform: translate3d(-35%, -20%, 0);
 }
 
 .li-over-text {
@@ -105,12 +109,15 @@ svg:not(:root) {
 .show-content { 
     .li-over-text {
         opacity: 1;
-        -webkit-transition: transform 1.7s cubic-bezier(0, 0.9, 0.53, 1) 0ms;
-        transition: transform 1.7s cubic-bezier(0, 0.9, 0.53, 1) 0ms;
+        -webkit-transition: -webkit-transform 1.5s cubic-bezier(0, 0.9, 0.53, 1) 0ms;
+        transition: transform 1.5s cubic-bezier(0, 0.9, 0.53, 1) 0ms;
     }
     .li-over-content {
-        -webkit-transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 300ms ease-out 0ms;
+        -webkit-transition: -webkit-transform 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 300ms ease-out 0ms;
         transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0ms, height 300ms ease-out 0ms;
+    }
+    .li-over-bar {
+        opacity: 1;
     }
 }
 
@@ -130,10 +137,13 @@ svg:not(:root) {
     left: 10px;
     right: 10px;
     height: 3px;
+    opacity: 0;
     z-index: 9;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
 }
+
+
 
 .li-bar-indicoter {
     background-color: rgba(255,255,255,0.8);
