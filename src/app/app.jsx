@@ -15,10 +15,10 @@ injectTapEventPlugin();
 //render(<Main />,document.getElementById('app'));
 
 render((
-	<Router history={browserHistory}>
-	    <Route path="/" component={Main} >
-	      	<IndexRoute component={NewList} />
+  <Router history={browserHistory}>
+      <Route path="/" component={Main} >
+          <IndexRoute component={NewList} />
             <Route path="/list" component={List} />
-	    </Route>
-	</Router>
+      </Route>
+  </Router>
 ),document.getElementById('app'))

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Box, Item } from 'react-polymer-layout'
 import Skrollr from 'skrollr'
 import Snap from 'snapsvg'
+import {Link} from 'react-router'
 
 const initSkrollr = function() {
     window.Skrollr = Skrollr.init({
@@ -173,6 +174,12 @@ const NewList = React.createClass({
         setTranslateX(this.state.imgNode, pxToMove);
     },
 
+    handleHref() {
+        // window.location.href = '/list';
+        let apple = document.querySelector('.link-to');
+        apple.click() 
+    },
+
     render() {
         let imagePos = this.state.imagePosition? this.state.imagePosition.getBoundingClientRect() : '';
         let dy = this.state.imageTran ? -1 * imagePos.top : 0;
@@ -208,8 +215,10 @@ const NewList = React.createClass({
                              data-bottom-top="transform: translate3d(-35%, -30%, 0px);" 
                              data-top-bottom="transform: translate3d(-35%, 0%, 0px);" />
                     </div>
-                    <div className="li-box"></div>
-                    <div className="li-box"></div>
+                    <div className="li-box" onClick={this.handleHref}></div>
+                    <div className="li-box">
+                        <Link className="link-to" to="/list">About</Link>
+                    </div>
                     <div className="li-box"></div>
                     <div className="li-box"></div>
                 </Box>
